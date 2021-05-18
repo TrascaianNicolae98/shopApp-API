@@ -1,0 +1,86 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.3.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+	id 'com.github.sherter.google-java-format' version '0.9'
+}
+group = 'com.api'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '8'
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	all {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+	}
+}
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+repositories {
+	mavenCentral()
+}
+
+task copyToLib(type: Copy) {
+	into "$buildDir/libs"
+	from(configurations.compile)
+}
+
+stage.dependsOn(copyToLib)
+dependencies {
+	compileOnly group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
+	compile group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	compile group: 'org.modelmapper', name: 'modelmapper', version: '0.7.5'
+	compile group: 'com.google.api-client', name: 'google-api-client', version: '1.30.10'
+	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.3.4.RELEASE'
+	compileJava.dependsOn 'googleJavaFormat'
+	verifyGoogleJavaFormat.dependsOn(tasks.googleJavaFormat)
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.4.1'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.4.1'
+
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.4.1'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+test {
+	useJUnitPlatform()
+}
